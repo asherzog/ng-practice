@@ -9,32 +9,32 @@
     <input type="search" ng-model="$ctrl.query" class="form-control input-sm search-form" placeholder="Filter">
   </li>
   <li class="col-xs-2">
-    <select class="form-control">
-      <option>Votes</option>
-      <option>Date</option>
-      <option>Title</option>
+    <select class="form-control" ng-model="$ctrl.sortBy">
+      <option value="votes">votes</option>
+      <option value="time">date</option>
+      <option value="title">title</option>
     </select>
   </li>
 </ul>
 
     <div class="row">
       <div class="col-md-8">
-        <form name="newPost" ng-show="$ctrl.toggle">
-          <div>
-            <label for="title">Title</label>
-            <input id="title" class="form-control" ng-model="$ctrl.post.title" required>
+        <form name="$ctrl.newPost" ng-show="$ctrl.toggle" novalidate>
+          <div class="form-group" ng-class="{ 'has-error': $ctrl.newPost.title.$touched && $ctrl.newPost.title.$invalid}">
+            <label class="control-label" for="title">Title</label>
+            <input id="title" name="title" class="form-control" ng-model="$ctrl.post.title" required>
           </div>
-          <div>
-            <label for="body">Body</label>
-            <textarea id="body" class="form-control" ng-model="$ctrl.post.body" required></textarea>
+          <div class="form-group" ng-class="{ 'has-error': $ctrl.newPost.body.$touched && $ctrl.newPost.body.$invalid}">
+            <label class="control-label" for="body">Body</label>
+            <textarea id="body" name="body" class="form-control" ng-model="$ctrl.post.body" required></textarea>
           </div>
-          <div>
-            <label for="author">Author</label>
-            <input id="author" class="form-control" ng-model="$ctrl.post.author" required>
+          <div class="form-group" ng-class="{ 'has-error': $ctrl.newPost.author.$touched && $ctrl.newPost.author.$invalid}">
+            <label class="control-label" for="author">Author</label>
+            <input id="author" name="author" class="form-control" ng-model="$ctrl.post.author" required>
           </div>
-          <div>
-            <label for="image-url">Image URL</label>
-            <input id="image-url" class="form-control" ng-model="$ctrl.post.image" required>
+          <div class="form-group" ng-class="{ 'has-error': $ctrl.newPost.image-url.$touched && $ctrl.newPost.image-url.$invalid}">
+            <label class="control-label" for="image-url">Image URL</label>
+            <input id="image-url" name="image-url" class="form-control" ng-model="$ctrl.post.image" required>
           </div>
           <div class="form-group">
             <button type="submit" class="btn btn-primary" ng-click="$ctrl.createNewPost()" ng-disabled="newPost.$invalid">
@@ -45,7 +45,7 @@
       </div>
     </div>
 
-    <div ng-repeat="post in $ctrl.posts | filter:$ctrl.query | orderBy: 'votes':true">
+    <div ng-repeat="post in $ctrl.posts | filter:$ctrl.query | orderBy:$ctrl.sortBy:true">
       <div class="row">
         <div class="col-md-12">
         <div class="well">
@@ -66,7 +66,7 @@
             <p>
               {{post.body}}
             </p>
-            <div>
+            <div ng-click="$ctrl.toggleComments(post)">
               <span am-time-ago="{{post.time}}"></span>
               |
               <i class="glyphicon glyphicon-comment"></i>
@@ -78,10 +78,10 @@
               </a>
             </div>
             <div class="row">
-              <div class="col-md-offset-1">
+              <div class="col-md-offset-1" ng-show="post.shown">
                 <hr>
-                <p>
-                  Comment
+                <p ng-repeat="comment in post.comments">
+                  {{comment}}
                 </p>
                 <form class="form-inline">
                   <div class="form-group">

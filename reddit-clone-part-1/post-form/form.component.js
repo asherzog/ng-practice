@@ -10,6 +10,8 @@
 
         vm.$onInit = function() {
           vm.toggle = false;
+          vm.toggleComment = false;
+          vm.sortBy = 'votes';
 
           vm.posts = [{
             id: 0,
@@ -53,6 +55,8 @@
           delete vm.post;
           delete vm.newPost;
           vm.toggle = false;
+          vm.newPost.$setUntouched();
+
         };
 
         vm.upVoted = function(post) {
@@ -69,8 +73,10 @@
           post.comments.push(post.comment);
           delete post.comment;
         };
-        
 
+        vm.toggleComments = function(post) {
+          post.shown = true;
+        };
 
       },
       templateUrl: '../post-form/template.html'
