@@ -7,7 +7,10 @@
       controller: function(moment) {
         const vm = this;
 
+
         vm.$onInit = function() {
+          vm.toggle = false;
+
           vm.posts = [{
             id: 0,
             title: 'A Poem From Me',
@@ -30,6 +33,10 @@
           }];
         };
 
+        vm.toggleCreate = function() {
+          vm.toggle = true;
+        };
+
         vm.createNewPost = function() {
           vm.newPost = {
             id: vm.posts.length + 1,
@@ -45,6 +52,7 @@
           vm.posts.push(vm.newPost);
           delete vm.post;
           delete vm.newPost;
+          vm.toggle = false;
         };
 
         vm.upVoted = function(post) {
@@ -61,6 +69,7 @@
           post.comments.push(post.comment);
           delete post.comment;
         };
+        
 
 
       },
